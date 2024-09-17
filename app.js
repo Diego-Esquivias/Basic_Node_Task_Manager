@@ -17,8 +17,8 @@ const getTasks = () => {
 }
 
 const saveTasks = (tasks) => {
-    fs.writeFileSync('./data/tasks.json', 'utf8', JSON.stringify(tasks, null, 2));
-}
+    fs.writeFileSync('./data/tasks.json', JSON.stringify(tasks, null, 2));
+};
 
 // Routes
 
@@ -45,16 +45,17 @@ app.post('/tasks', (req, res) => {
 // GET: Show a single task (for editing)
 app.get('/tasks/:id/edit', (req, res) => {
     const tasks = getTasks();
-    const task = tasks.find(task => task.id === req.params.id);
+    const task = tasks.find(task => task.id == req.params.id);
     res.render('tasks', { task });
 })
 
 // PUT: Update a task
 app.post('/tasks/:id', (req, res) => {
     const tasks = getTasks();
-    const taskIndex = tasks.findIndex(task => task.id === req.params.id);
+    const taskIndex = tasks.findIndex(task => task.id == req.params.id);
     tasks[taskIndex].description = req.body.description;
-    tasks[taskIndex].name = req.body.date;
+    tasks[taskIndex].name = req.body.name;
+    tasks[taskIndex].date = req.body.date;
     saveTasks(tasks);
     res.redirect('/');
 })
@@ -62,7 +63,7 @@ app.post('/tasks/:id', (req, res) => {
 // DELETE: Delete a task
 app.post('/tasks/:id/delete', (req, res) => {
     let tasks = getTasks();
-    tasks = tasks.filter(task => task.id!== req.params.id);
+    tasks = tasks.filter(task => task.id != req.params.id);
     saveTasks(tasks);
     res.redirect('/');
 })
